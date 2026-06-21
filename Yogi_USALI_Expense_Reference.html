@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yogi Management — USALI Expense Reference</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #0D1B2A;
+    --slate:   #1C2E42;
+    --gold:    #C9983A;
+    --gold-lt: #E8C16A;
+    --cream:   #F5F2EC;
+    --sand:    #EBE5D8;
+    --text:    #1A1A1A;
+    --muted:   #6B7280;
+    --border:  #D6CEBF;
+    --white:   #FFFFFF;
+    --tag-bg:  #EEF2F7;
+    --tag-txt: #354A60;
+    --pill-rooms:     #E8F0FB; --pill-rooms-t:     #2A4A8A;
+    --pill-fb:        #FEF3E2; --pill-fb-t:        #7A4A10;
+    --pill-admin:     #F0EBF8; --pill-admin-t:     #4A2A7A;
+    --pill-sales:     #E2F5EA; --pill-sales-t:     #1A5A30;
+    --pill-pm:        #FDE8E8; --pill-pm-t:        #7A1A1A;
+    --pill-ut:        #E8F8F5; --pill-ut-t:        #1A5A4A;
+    --pill-it:        #FEF9E0; --pill-it-t:        #5A4A00;
+    --pill-hr:        #F5E8F0; --pill-hr-t:        #5A1A4A;
+    --pill-trans:     #E8F5FE; --pill-trans-t:     #1A4A6A;
+    --pill-retail:    #FDE8F5; --pill-retail-t:    #6A1A5A;
+    --pill-parking:   #EAF3E8; --pill-parking-t:   #2A5A20;
+    --pill-spa:       #F8E8F0; --pill-spa-t:       #5A1A3A;
+    --pill-golf:      #E8F5E8; --pill-golf-t:      #1A5A10;
+    --pill-other:     #F0F0F0; --pill-other-t:     #404040;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--navy);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  .header-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .logo-mark {
+    width: 40px; height: 40px;
+    background: var(--gold);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 18px; color: var(--navy);
+    flex-shrink: 0;
+    letter-spacing: -1px;
+  }
+  .header-text h1 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.3px;
+  }
+  .header-text p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+    margin-top: 1px;
+  }
+  .header-badge {
+    margin-left: auto;
+    background: rgba(201,152,58,0.18);
+    border: 1px solid rgba(201,152,58,0.35);
+    color: var(--gold-lt);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* HERO BAR */
+  .hero {
+    background: var(--slate);
+    padding: 28px 32px;
+    border-bottom: 1px solid rgba(201,152,58,0.2);
+  }
+  .hero-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .hero h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .hero p {
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.6;
+    max-width: 700px;
+  }
+  .hero p strong { color: var(--gold-lt); font-weight: 500; }
+
+  /* CONTROLS */
+  .controls {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px 32px 0;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 240px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 13px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+  #searchInput {
+    width: 100%;
+    padding: 11px 40px 11px 40px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  #searchInput:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,152,58,0.12); }
+  #searchInput::placeholder { color: #9CA3AF; }
+  .clear-btn {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; color: var(--muted);
+    font-size: 16px; line-height: 1;
+    display: none;
+    padding: 4px;
+  }
+  .clear-btn:hover { color: var(--text); }
+
+  #deptFilter {
+    padding: 11px 36px 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    background: var(--white);
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    min-width: 200px;
+    transition: border-color 0.15s;
+  }
+  #deptFilter:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,152,58,0.12); }
+
+  .results-count {
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .results-count span { color: var(--gold); font-weight: 500; }
+
+  /* TABLE */
+  .table-wrap {
+    max-width: 1300px;
+    margin: 16px auto 40px;
+    padding: 0 32px;
+  }
+  .table-container {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  thead tr {
+    background: var(--navy);
+  }
+  thead th {
+    padding: 13px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+  }
+  thead th:hover { color: var(--gold-lt); }
+  thead th .sort-icon { margin-left: 4px; opacity: 0.4; font-size: 10px; }
+  thead th.sorted .sort-icon { opacity: 1; color: var(--gold-lt); }
+
+  tbody tr {
+    border-bottom: 1px solid #F0EBE0;
+    transition: background 0.08s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #FDFAF4; }
+  tbody tr.hidden { display: none; }
+
+  td { padding: 11px 16px; vertical-align: top; line-height: 1.5; }
+  td:nth-child(2) {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--slate);
+    white-space: nowrap;
+  }
+  td:nth-child(3) { font-weight: 500; color: var(--navy); }
+  td:nth-child(4) { color: #4B5563; }
+
+  .dept-pill {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  mark {
+    background: rgba(201,152,58,0.25);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    display: none;
+    color: var(--muted);
+  }
+  .empty-state .icon { font-size: 36px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; margin-bottom: 6px; color: var(--text); font-weight: 500; }
+  .empty-state small { font-size: 13px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    padding: 20px 32px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+  }
+  footer strong { color: rgba(255,255,255,0.6); }
+
+  /* MOBILE */
+  @media (max-width: 700px) {
+    .header-inner { padding: 14px 18px; gap: 12px; }
+    .header-badge { display: none; }
+    .hero { padding: 20px 18px; }
+    .controls { padding: 14px 18px 0; gap: 10px; }
+    .table-wrap { padding: 12px 12px 30px; margin: 0; }
+    table { font-size: 12.5px; }
+    td { padding: 9px 10px; }
+    #deptFilter { min-width: 160px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-mark">YM</div>
+    <div class="header-text">
+      <h1>Yogi Management — USALI Expense Reference</h1>
+      <p>Expense coding guide for all Yogi Management properties</p>
+    </div>
+    <div class="header-badge">USALI 11th Edition</div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <h2>Where does this expense go?</h2>
+    <p>Search by item name (e.g. <strong>"key cards"</strong>, <strong>"linen"</strong>, <strong>"pest control"</strong>) or filter by department to find the correct USALI account number and account name for any expense. When in doubt, reach out to <strong>Avery (adminace@yogimgt.com)</strong> before coding.</p>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Search items, accounts, keywords…" autocomplete="off" spellcheck="false">
+    <button class="clear-btn" id="clearBtn" title="Clear search">✕</button>
+  </div>
+  <select id="deptFilter">
+    <option value="">All Departments</option>
+    <option value="Rooms">Rooms</option>
+    <option value="Food &amp; Beverage">Food &amp; Beverage</option>
+    <option value="Administrative &amp; General">Administrative &amp; General</option>
+    <option value="Sales &amp; Marketing">Sales &amp; Marketing</option>
+    <option value="Property Operations &amp; Maintenance">Property Operations &amp; Maintenance</option>
+    <option value="Utilities">Utilities</option>
+    <option value="Information &amp; Telecom">Information &amp; Telecom</option>
+    <option value="Human Resources">Human Resources</option>
+    <option value="Transportation">Transportation</option>
+    <option value="Retail">Retail</option>
+    <option value="Parking">Parking</option>
+    <option value="Spa">Spa</option>
+    <option value="Golf">Golf</option>
+    <option value="Undistributed">Undistributed</option>
+    <option value="Other">Other</option>
+  </select>
+  <div class="results-count"><span id="resultCount">—</span> results</div>
+</div>
+
+<div class="table-wrap">
+  <div class="table-container">
+    <table id="refTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)">Department <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(1)">Account # <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(2)">Account Name <span class="sort-icon">↕</span></th>
+          <th onclick="sortTable(3)">Item / Expense Examples <span class="sort-icon">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+      </tbody>
+    </table>
+    <div class="empty-state" id="emptyState">
+      <div class="icon">🔍</div>
+      <p>No matching expenses found</p>
+      <small>Try a different keyword, or email <a href="mailto:adminace@yogimgt.com">adminace@yogimgt.com</a> for help.</small>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Yogi Management, Inc.</strong> — USALI 11th Edition Reference &nbsp;|&nbsp; Questions? <a href="mailto:adminace@yogimgt.com" style="color:rgba(255,255,255,0.5)">adminace@yogimgt.com</a>
+</footer>
+
+<script>
+// ─── FULL USALI 11th EDITION DATASET ────────────────────────────────────────
+// Format: [Department, Account#, Account Name, Item Examples]
+const DATA = [
+  // ── ROOMS ──────────────────────────────────────────────────────────────────
+  ["Rooms","1051090","Rooms-Management Payroll","Payroll, front office manager; Director of rooms; Housekeeping director/manager; Night manager; Director of reservations"],
+  ["Rooms","1052040","Comp F&B Payroll","Payroll, breakfast attendant; Club floor attendant; Lounge attendant"],
+  ["Rooms","1052070","Front Office Payroll","Payroll, bell service; Desk clerk; Door attendant; Valet parking"],
+  ["Rooms","1052110","Guest Services Payroll","Payroll, concierge; Guest services agent; Guest relations"],
+  ["Rooms","1052120","Housekeeping Payroll","Payroll, housekeeping attendant; Room attendant; Linen room attendant"],
+  ["Rooms","1052170","Laundry Payroll","Payroll, laundry attendant; Laundry worker"],
+  ["Rooms","1052210","Reservations Payroll","Payroll, reservations agent; Reservations coordinator"],
+  ["Rooms","1052270","Transportation Payroll","Payroll, transportation driver; Shuttle driver"],
+  ["Rooms","1053200","Rooms-Contract Labor","Contract cleaning services; Outsourced housekeeping; Leased labor"],
+  ["Rooms","1053300","Rooms-Bonuses & Incentives","Performance bonus; Housekeeping incentive pay"],
+  ["Rooms","1069099","Rooms-Payroll Taxes","FICA; Federal unemployment tax (FUTA); State unemployment tax (SUTA); State disability insurance"],
+  ["Rooms","1069199","Rooms-Supplemental Pay","Vacation pay; Sick pay; Holiday pay; PTO; Jury duty pay; Severance pay"],
+  ["Rooms","1069499","Rooms-Employee Benefits","Health insurance; Dental insurance; 401(k); Life insurance; Vision insurance; Meal allowance"],
+  ["Rooms","1071010","Rooms-Cable TV","Cable TV service; In-room movie service; Streaming service subscriptions"],
+  ["Rooms","1071020","Rooms-Complimentary Food & Bev","Continental breakfast supplies; Coffee station supplies; Bottled water for rooms; Snack items (complimentary)"],
+  ["Rooms","1071030","Rooms-Commissions","OTA commissions (Expedia, Booking.com, Hotels.com); Travel agent commissions; GDS commissions"],
+  ["Rooms","1071040","Rooms-Contract Services","Pest control (rooms area); Exterminator; Window cleaning (rooms)"],
+  ["Rooms","1071050","Rooms-Guest Supplies","Toiletries; Shampoo; Conditioner; Soap; Lotion; Shower gel; Cotton balls; Q-tips; Sewing kits; Shoe mitts; Shower caps; Dental kits; Razors; Vanity kits"],
+  ["Rooms","1071055","Rooms-Guest Transportation","Shuttle fuel; Guest transportation costs; Airport shuttle expenses"],
+  ["Rooms","1071060","Rooms-Laundry & Dry Cleaning","Laundry supplies; Washing powder; Dryer sheets; Dry cleaning (guest laundry); Stain remover"],
+  ["Rooms","1071065","Rooms-Linen","Bed sheets; Pillowcases; Duvet covers; Bath towels; Hand towels; Washcloths; Pool towels; Bath mats; Mattress pads; Pillow protectors; Blankets; Bedspreads; Comforters"],
+  ["Rooms","1071070","Rooms-Miscellaneous","Miscellaneous rooms supplies not elsewhere classified"],
+  ["Rooms","1071075","Rooms-Office Supplies","Front desk office supplies; Printer paper; Pens; Folders; Staplers; Paper clips"],
+  ["Rooms","1071080","Rooms-Operating Supplies","Trash bags; Cleaning cloths; Mop heads; Broom handles; Spray bottles; Rubber gloves; Scrub brushes; Key card holders; Key envelopes; Luggage tags; Do Not Disturb signs"],
+  ["Rooms","1071085","Rooms-Paper & Plastic Supplies","Facial tissue; Toilet paper; Paper towels; Garbage bags; Toilet seat covers; Paper cups"],
+  ["Rooms","1071090","Rooms-Printing & Stationery","Guestroom compendiums; Notepads; Pens (branded); Letterhead; Welcome cards; In-room menus"],
+  ["Rooms","1071095","Rooms-Reservations","Online reservation fees; Booking engine subscription; CRS fees; Channel manager fees"],
+  ["Rooms","1071100","Rooms-Telecommunications","Guestroom phone charges; Long-distance charges (room phones); Internet service (guest-facing)"],
+  ["Rooms","1071105","Rooms-Training","Housekeeping training costs; Front desk training; Staff training materials"],
+  ["Rooms","1071110","Rooms-Uniforms","Housekeeping uniforms; Front desk uniforms; Bellman uniforms; Laundry of uniforms"],
+  ["Rooms","1071115","Rooms-Other Expenses","Miscellaneous room department expenses"],
+  // ── FOOD & BEVERAGE ────────────────────────────────────────────────────────
+  ["Food & Beverage","2051090","F&B-Management Payroll","Payroll, food & beverage director; Restaurant manager; Banquet manager; Executive chef"],
+  ["Food & Beverage","2052010","F&B-Culinary Payroll","Payroll, line cook; Chef; Prep cook; Pastry chef; Breakfast cook"],
+  ["Food & Beverage","2052020","F&B-Restaurant Payroll","Payroll, server; Food runner; Busser; Host; Cashier (F&B)"],
+  ["Food & Beverage","2052030","F&B-Banquet Payroll","Payroll, banquet server; Banquet setup; Banquet captain"],
+  ["Food & Beverage","2052040","F&B-Bar Payroll","Payroll, bartender; Bar back"],
+  ["Food & Beverage","2052050","F&B-Room Service Payroll","Payroll, room service attendant; In-room dining server"],
+  ["Food & Beverage","2053200","F&B-Contract Labor","Outsourced catering labor; Contract food service employees"],
+  ["Food & Beverage","2069099","F&B-Payroll Taxes","FICA; FUTA; SUTA (F&B employees)"],
+  ["Food & Beverage","2069499","F&B-Employee Benefits","Health insurance (F&B); Meals provided to staff; 401(k) (F&B)"],
+  ["Food & Beverage","2071010","F&B-China, Glassware & Silver","Plates; Glasses; Cups; Silverware; Serving platters; Bowls; Coffee mugs; Wine glasses; Beer glasses"],
+  ["Food & Beverage","2071020","F&B-Contract Services","Hood cleaning; Kitchen equipment maintenance contracts; Grease trap cleaning; Pest control (kitchen)"],
+  ["Food & Beverage","2071025","F&B-Cost of Food","Food product purchases; Breakfast food; Buffet food; Banquet food; Grocery purchases; Provisions"],
+  ["Food & Beverage","2071030","F&B-Cost of Beverages","Alcohol; Beer; Wine; Spirits; Non-alcoholic beverages; Coffee; Tea; Juice; Soft drinks; Water"],
+  ["Food & Beverage","2071035","F&B-Decorations & Plants","Table centerpieces; Event decorations; Floral arrangements; Holiday decorations (F&B)"],
+  ["Food & Beverage","2071040","F&B-Kitchen Fuel","Natural gas (kitchen); Propane (kitchen equipment)"],
+  ["Food & Beverage","2071045","F&B-Laundry & Dry Cleaning","Linen napkins; Tablecloths; Kitchen linens; Aprons (laundry); Chef coats (laundry)"],
+  ["Food & Beverage","2071050","F&B-Licenses & Permits","Liquor license; Food service permit; Health department license"],
+  ["Food & Beverage","2071055","F&B-Menu Printing","Menu design and printing; Wine list printing; Daily specials boards"],
+  ["Food & Beverage","2071060","F&B-Miscellaneous","Miscellaneous F&B expenses not elsewhere classified"],
+  ["Food & Beverage","2071065","F&B-Music & Entertainment","Background music license (ASCAP/BMI); Live entertainment; DJ fees"],
+  ["Food & Beverage","2071070","F&B-Office Supplies","F&B office supplies; Order pads; Guest checks"],
+  ["Food & Beverage","2071075","F&B-Operating Supplies","Toothpicks; Straws; Cocktail napkins; Dish soap; Sanitizer; Cleaning supplies (kitchen); Takeout containers; To-go bags; Coffee filters; Paper cups"],
+  ["Food & Beverage","2071080","F&B-Paper & Plastics","Disposable plates; Plastic cups; Paper napkins; Plastic wrap; Aluminum foil"],
+  ["Food & Beverage","2071085","F&B-Printing & Stationery","Event menus; Banquet event orders (BEOs); Signage (F&B)"],
+  ["Food & Beverage","2071090","F&B-Training","Food safety training; TIPS training; ServSafe certification; Bartender training"],
+  ["Food & Beverage","2071095","F&B-Uniforms","Server uniforms; Chef coats; Aprons; Host uniforms; Bar uniforms"],
+  // ── ADMINISTRATIVE & GENERAL ───────────────────────────────────────────────
+  ["Administrative & General","6051090","A&G-Management Payroll","Payroll, general manager; Controller; Assistant general manager; CFO; HR director"],
+  ["Administrative & General","6052010","A&G-Accounting Payroll","Payroll, bookkeeper; Accounts payable clerk; Accounts receivable clerk; Night auditor; Payroll administrator"],
+  ["Administrative & General","6052020","A&G-Security Payroll","Payroll, security officer; Loss prevention officer"],
+  ["Administrative & General","6053200","A&G-Contract Labor","Contract accounting; Outsourced security; Temp agency labor (admin)"],
+  ["Administrative & General","6069099","A&G-Payroll Taxes","FICA; FUTA; SUTA (A&G employees)"],
+  ["Administrative & General","6069499","A&G-Employee Benefits","Health insurance (A&G); 401(k) (A&G); Life insurance (A&G)"],
+  ["Administrative & General","6071010","A&G-Bank Charges","Bank service fees; Wire transfer fees; Merchant processing fees; Credit card processing fees; Chargeback fees; NSF fees; Lockbox fees"],
+  ["Administrative & General","6071015","A&G-Cash Overages & Shortages","Cash drawer variances; Petty cash reconciliation differences"],
+  ["Administrative & General","6071020","A&G-Contract Services","Armored car service; Shredding service; Accounting software fees; Payroll processing fees (ADP, Paychex)"],
+  ["Administrative & General","6071025","A&G-Corporate Office Reimbursements","Management fees; Brand fees; Franchise fees paid to corporate"],
+  ["Administrative & General","6071030","A&G-Donations & Contributions","Charitable donations; Community contributions; Sponsorships"],
+  ["Administrative & General","6071035","A&G-Dues & Subscriptions","Chamber of commerce dues; Hotel association dues; Trade publications; Software subscriptions (accounting); Industry memberships"],
+  ["Administrative & General","6071040","A&G-Human Resources","Recruiting costs; Background checks; Drug testing; Employee recognition; Employee events; Job posting fees (Indeed, ZipRecruiter)"],
+  ["Administrative & General","6071045","A&G-Insurance - General","General liability insurance; Property insurance; Umbrella insurance; Directors & officers insurance; Workers comp insurance; Cyber liability insurance"],
+  ["Administrative & General","6071050","A&G-Legal Fees","Attorney fees; Legal retainer; Contract review; Litigation costs; Regulatory compliance legal"],
+  ["Administrative & General","6071055","A&G-Miscellaneous","Miscellaneous A&G expenses not elsewhere classified"],
+  ["Administrative & General","6071060","A&G-Office Supplies","Pens; Staplers; Paper clips; Folders; Binders; Tape; Scissors; Notepads; Copy paper; Envelopes; Rubber bands; Correction fluid; Labels"],
+  ["Administrative & General","6071065","A&G-Operating Supplies","Printer ink/toner; Office equipment supplies; Stamp/postage meter refills"],
+  ["Administrative & General","6071070","A&G-Postage & Overnight Delivery","Postage stamps; FedEx; UPS; USPS; Courier services; Overnight mail"],
+  ["Administrative & General","6071075","A&G-Printing & Stationery","Business cards; Letterhead; Envelopes; Report printing; Forms printing; Policy manual printing"],
+  ["Administrative & General","6071080","A&G-Professional Fees","CPA fees; Audit fees; Consulting fees; IT consulting; HR consulting; Management consulting"],
+  ["Administrative & General","6071085","A&G-Security Systems","Alarm monitoring; Security camera maintenance; Access control systems; Locksmith"],
+  ["Administrative & General","6071090","A&G-Training","Management training; Compliance training; Leadership development; Online training subscriptions (e.g., Percipio)"],
+  ["Administrative & General","6071095","A&G-Travel & Entertainment","GM travel; Staff business travel; Meals (business entertainment); Airfare; Hotel for business travel; Car rental (business travel); Mileage reimbursement"],
+  ["Administrative & General","6071100","A&G-Uniforms","Management uniforms; Security uniforms; Administrative uniforms"],
+  // ── SALES & MARKETING ─────────────────────────────────────────────────────
+  ["Sales & Marketing","7051090","S&M-Management Payroll","Payroll, director of sales; Sales manager; Marketing coordinator; Revenue manager"],
+  ["Sales & Marketing","7052010","S&M-Sales Payroll","Payroll, sales associate; Catering sales coordinator"],
+  ["Sales & Marketing","7053200","S&M-Contract Labor","Contract marketing; Freelance copywriter; Contract photographer"],
+  ["Sales & Marketing","7069099","S&M-Payroll Taxes","FICA; FUTA; SUTA (Sales & Marketing employees)"],
+  ["Sales & Marketing","7069499","S&M-Employee Benefits","Health insurance (S&M); 401(k) (S&M)"],
+  ["Sales & Marketing","7071010","S&M-Advertising","Digital advertising (Google, Meta); Print advertising; Radio; Billboards; TV advertising; Paid social media"],
+  ["Sales & Marketing","7071015","S&M-Agency Fees","Marketing agency retainer; PR firm fees; Digital agency fees"],
+  ["Sales & Marketing","7071020","S&M-Brand Fees","Franchise brand fees; Brand contribution fund (BCF); Loyalty program fees; Brand standards compliance costs"],
+  ["Sales & Marketing","7071025","S&M-Contract Services","Mystery shopper programs; Reputation management services; Review platform subscriptions"],
+  ["Sales & Marketing","7071030","S&M-Direct Mail","Postcard campaigns; Direct mail design and printing; Mailing lists"],
+  ["Sales & Marketing","7071035","S&M-Dues & Subscriptions","CVB memberships; Tourism board fees; Sales tech subscriptions (CRM, sales tools)"],
+  ["Sales & Marketing","7071040","S&M-Miscellaneous","Miscellaneous Sales & Marketing expenses"],
+  ["Sales & Marketing","7071045","S&M-Online Marketing","Website hosting; SEO services; Email marketing platform; Social media management tools; Online listing fees"],
+  ["Sales & Marketing","7071050","S&M-Photography & Video","Professional photography; Video production; Virtual tour creation; Property photo shoots"],
+  ["Sales & Marketing","7071055","S&M-Point-of-Sale Materials","Brochures; Rack cards; Flyers; Signage (promotional); Collateral printing"],
+  ["Sales & Marketing","7071060","S&M-Printing & Stationery","Sales kit printing; Proposal printing; Presentation materials; Corporate stationery"],
+  ["Sales & Marketing","7071065","S&M-Research","Market research; Competitive analysis tools; STR reports (RevPAR data); Guest satisfaction surveys"],
+  ["Sales & Marketing","7071070","S&M-Trade Shows & Events","Trade show booth fees; Convention attendance; Travel to trade shows; Booth materials"],
+  ["Sales & Marketing","7071075","S&M-Training","Sales training; Revenue management training; Digital marketing training"],
+  ["Sales & Marketing","7071080","S&M-Travel & Entertainment","Sales team travel; Client entertainment; FAM trip expenses; Site tour expenses"],
+  // ── PROPERTY OPERATIONS & MAINTENANCE ────────────────────────────────────
+  ["Property Operations & Maintenance","9051090","POM-Management Payroll","Payroll, chief engineer; Facilities director; Maintenance manager"],
+  ["Property Operations & Maintenance","9052010","POM-Engineering Payroll","Payroll, maintenance technician; HVAC technician; Electrician; Plumber; Engineer; Groundskeeper; Painter"],
+  ["Property Operations & Maintenance","9053200","POM-Contract Labor","Contracted maintenance; Outsourced engineering services; Temp maintenance workers"],
+  ["Property Operations & Maintenance","9069099","POM-Payroll Taxes","FICA; FUTA; SUTA (POM employees)"],
+  ["Property Operations & Maintenance","9069499","POM-Employee Benefits","Health insurance (POM); 401(k) (POM)"],
+  ["Property Operations & Maintenance","9071010","POM-Building Supplies","Lumber; Drywall; Paint; Caulk; Adhesives; Spackle; Plywood; Insulation; Roofing materials; Concrete; Mortar; Grout; Tile; Carpet; Flooring materials"],
+  ["Property Operations & Maintenance","9071015","POM-Contract Services","Elevator maintenance contract; Fire alarm inspection; HVAC service contract; Pool maintenance contract; Landscaping contract; Pest control (property exterior); Snow removal; Parking lot sweeping; Janitorial (common areas)"],
+  ["Property Operations & Maintenance","9071020","POM-Electrical & Mechanical","Light bulbs; LED bulbs; Fluorescent tubes; Ballasts; Electrical outlets; Switches; Circuit breakers; Fuses; Extension cords; Wire; Conduit; Motors; Belts; Filters (HVAC); Thermostats; Smoke detectors; Carbon monoxide detectors; Exit signs; Emergency lights"],
+  ["Property Operations & Maintenance","9071025","POM-Elevator","Elevator maintenance; Elevator inspection fees; Elevator repairs; Elevator modernization"],
+  ["Property Operations & Maintenance","9071030","POM-Engineering Supplies","Tools; Hand tools; Power tools; Safety equipment; Work gloves; Safety glasses; Hard hats; Tool belts; Tape measures; Drills; Saw blades; Nuts; Bolts; Screws; Nails; Anchors; WD-40; Penetrating oil"],
+  ["Property Operations & Maintenance","9071035","POM-Equipment Rental","Scissor lift rental; Boom lift rental; Pressure washer rental; Dumpster rental; Equipment rental (general)"],
+  ["Property Operations & Maintenance","9071040","POM-Fire Protection","Fire extinguisher inspection; Sprinkler system testing; Fire suppression system; Fire hose; Smoke detector batteries"],
+  ["Property Operations & Maintenance","9071045","POM-Furniture, Fixtures & Equipment","Replacement furniture; Guest room FF&E; Lobby furniture; Mattresses; Box springs; Headboards; Desks; Chairs; Lamps; Artwork; Mirrors; TV sets; Microwaves; Mini-fridges; Coffee makers; Hair dryers; Irons; Ironing boards"],
+  ["Property Operations & Maintenance","9071050","POM-Grounds & Landscaping","Mulch; Fertilizer; Grass seed; Plants; Flowers; Landscaping tools; Irrigation supplies; Ice melt (salt); Snow removal supplies; Parking lot maintenance"],
+  ["Property Operations & Maintenance","9071055","POM-HVAC","Air filters; HVAC parts; Refrigerant; Coolant; Coil cleaner; Duct tape; HVAC belts; Fan motors; Thermostat replacements; Boiler parts"],
+  ["Property Operations & Maintenance","9071060","POM-Keys & Locks","Key cards; Key card encoders; Key card stock; Electronic lock batteries; Door locks; Deadbolts; Locksmith services; Lock cylinders; Key cut"],
+  ["Property Operations & Maintenance","9071065","POM-Laundry Equipment","Washing machine repairs; Dryer repairs; Laundry equipment parts; Commercial washer belts"],
+  ["Property Operations & Maintenance","9071070","POM-Licenses & Permits","Boiler inspection permit; Elevator operating permit; Building permit; Plumbing permit; Electrical permit; Pool permit; Business license (property)"],
+  ["Property Operations & Maintenance","9071075","POM-Miscellaneous","Miscellaneous POM expenses not elsewhere classified"],
+  ["Property Operations & Maintenance","9071080","POM-Operating Supplies","Cleaning chemicals; Degreaser; Disinfectant; Bleach; All-purpose cleaner; Mop heads; Brooms; Dustpans; Vacuums; Vacuum bags; Squeegees; Spray bottles; Buckets; Microfiber cloths; Window cleaner; Floor wax; Pool chemicals; Chlorine tablets; pH balancer; Solar salt; Water softener salt; Pool shock"],
+  ["Property Operations & Maintenance","9071085","POM-Painting & Decorating","Exterior paint; Interior paint; Primers; Brushes; Rollers; Painter's tape; Drop cloths; Wall patches; Texture spray; Trim paint"],
+  ["Property Operations & Maintenance","9071090","POM-Plumbing","Pipe fittings; Pipe wrench; Plumber's tape; Faucets; Showerheads; Toilet parts (flapper, fill valve, handle); Drain cleaner; Plungers; Caulk (plumbing); Water heater parts; Expansion tank; Shower valves; PVC pipe; Copper pipe"],
+  ["Property Operations & Maintenance","9071095","POM-Pool","Pool chemicals; Chlorine; Pool shock; pH up/down; Algaecide; Pool brushes; Pool nets; Pool vacuum; Pool thermometer; Pool inspection fees; Lifeguard equipment"],
+  ["Property Operations & Maintenance","9071100","POM-Printing & Stationery","Maintenance work orders; Engineering department forms; Request forms"],
+  ["Property Operations & Maintenance","9071105","POM-Signage","Interior signage; Exterior signage; ADA signs; Wayfinding signs; Door number plates; Exit signs; Safety signs; Parking lot signs"],
+  ["Property Operations & Maintenance","9071110","POM-Training","OSHA training; HVAC certification; Safety training; EPA certification; Maintenance staff training"],
+  ["Property Operations & Maintenance","9071115","POM-Uniforms","Maintenance uniforms; Coveralls; Safety boots; Work shirts; Work pants"],
+  // ── UTILITIES ─────────────────────────────────────────────────────────────
+  ["Utilities","10071010","Utilities-Electric","Electric bill; Electricity charges; Electric utility; Power company invoice; Xcel Energy; MidAmerican Energy"],
+  ["Utilities","10071020","Utilities-Gas","Natural gas bill; Propane; Gas utility; Gas service charges"],
+  ["Utilities","10071030","Utilities-Water","Water utility bill; Municipal water charges; Water & sewer bill"],
+  ["Utilities","10071040","Utilities-Sewer","Sewer charges; Wastewater treatment fees"],
+  ["Utilities","10071050","Utilities-Solid Waste","Trash pickup; Waste removal; Recycling service; Dumpster fees; Garbage collection"],
+  ["Utilities","10071060","Utilities-Other","Stormwater fees; Utility surcharges; Environmental surcharges"],
+  // ── INFORMATION & TELECOM ─────────────────────────────────────────────────
+  ["Information & Telecom","11051090","IT-Management Payroll","Payroll, IT director; Technology manager"],
+  ["Information & Telecom","11052010","IT-Staff Payroll","Payroll, IT technician; Systems administrator; Help desk"],
+  ["Information & Telecom","11071010","IT-Cloud Services","Cloud storage; Google Workspace; Microsoft 365; Dropbox; OneDrive; AWS; Azure"],
+  ["Information & Telecom","11071015","IT-Computer Equipment","Computers; Laptops; Tablets; Monitors; Printers; Scanners; Servers; Network switches; Routers; Hubs; UPS battery backups"],
+  ["Information & Telecom","11071020","IT-Contract Services","IT managed services; Outsourced IT support; Tech consulting; Software implementation"],
+  ["Information & Telecom","11071025","IT-Hardware Maintenance","Printer repairs; Computer repairs; Server maintenance; Hardware warranties"],
+  ["Information & Telecom","11071030","IT-Internet","Internet service provider; Broadband; Fiber internet; WiFi equipment; Guest WiFi service"],
+  ["Information & Telecom","11071035","IT-Miscellaneous","Miscellaneous IT expenses"],
+  ["Information & Telecom","11071040","IT-Operating Supplies","USB drives; Cables; Ink cartridges; Toner; Paper (IT department); Mouse; Keyboard; Headsets"],
+  ["Information & Telecom","11071045","IT-Property Management System","PMS software license; Hilton OnQ; IHG Concerto; Opera PMS; Maestro PMS; PMS support fees; PMS upgrades"],
+  ["Information & Telecom","11071050","IT-Software","POS software; Accounting software (QuickBooks); Revenue management software; Channel manager; Rate shopping tools; Reputation management software; HR software; Payroll software (ADP); Guest experience software; Otelier; HelloGM"],
+  ["Information & Telecom","11071055","IT-Telephone","Phone system; VOIP service; Long-distance charges; Cell phone plans; Business mobile phones; Telephone equipment"],
+  ["Information & Telecom","11071060","IT-Training","IT training; Cybersecurity training; Software training; Technology courses"],
+  // ── HUMAN RESOURCES ───────────────────────────────────────────────────────
+  ["Human Resources","12051090","HR-Management Payroll","Payroll, HR manager; HR director; HR generalist"],
+  ["Human Resources","12071010","HR-Employee Relations","Employee recognition programs; Team building events; Service awards; Employee appreciation events; Staff parties"],
+  ["Human Resources","12071015","HR-Miscellaneous","Miscellaneous HR expenses"],
+  ["Human Resources","12071020","HR-Recruiting","Job posting fees; Indeed; ZipRecruiter; LinkedIn; Background checks; Drug testing; Pre-employment screening; Applicant tracking system; Staffing agency fees; Signing bonus"],
+  ["Human Resources","12071025","HR-Relocation","Relocation assistance; Moving expenses for new hires"],
+  ["Human Resources","12071030","HR-Training & Development","Safety training; Compliance training (OSHA, ADA); Leadership development; Online learning platforms; Certifications; Tuition reimbursement; Brand standards training"],
+  // ── TRANSPORTATION ────────────────────────────────────────────────────────
+  ["Transportation","13052010","Trans-Driver Payroll","Payroll, shuttle driver; Transportation driver; Van driver"],
+  ["Transportation","13071010","Transportation-Contract Services","Third-party shuttle service; Contract transportation"],
+  ["Transportation","13071015","Transportation-Fuel","Gas for shuttle; Fuel for hotel vehicles; Diesel"],
+  ["Transportation","13071020","Transportation-Insurance","Vehicle insurance; Commercial auto insurance; Fleet insurance"],
+  ["Transportation","13071025","Transportation-Licenses","Vehicle registration; Commercial driver license fees; DOT fees"],
+  ["Transportation","13071030","Transportation-Operating Supplies","Vehicle cleaning supplies; Air fresheners (van); Maps; First aid kit (vehicle)"],
+  ["Transportation","13071035","Transportation-Vehicle Maintenance","Oil changes; Tire replacement; Vehicle repairs; Auto maintenance; Car wash; Fleet vehicle service"],
+  // ── RETAIL ────────────────────────────────────────────────────────────────
+  ["Retail","14052010","Retail-Staff Payroll","Payroll, gift shop attendant; Retail associate"],
+  ["Retail","14071010","Retail-Cost of Sales","Merchandise purchased for resale; Gift shop inventory; Sundry shop items; Souvenir items"],
+  ["Retail","14071015","Retail-Operating Supplies","Shopping bags; Tissue paper; Gift boxes; Price tags; Hangers; Display fixtures; Cash register supplies"],
+  // ── PARKING ───────────────────────────────────────────────────────────────
+  ["Parking","15052010","Parking-Staff Payroll","Payroll, parking attendant; Valet attendant; Lot attendant"],
+  ["Parking","15071010","Parking-Contract Services","Valet management company; Parking management company"],
+  ["Parking","15071015","Parking-Licenses & Permits","Parking lot permit; Valet permit; Parking structure license"],
+  ["Parking","15071020","Parking-Operating Supplies","Parking tickets; Valet tickets; Cones; Barriers; Parking signs; Lot striping supplies; Parking kiosk supplies"],
+  // ── SPA ───────────────────────────────────────────────────────────────────
+  ["Spa","16052010","Spa-Therapist Payroll","Payroll, massage therapist; Esthetician; Nail technician; Spa attendant"],
+  ["Spa","16071010","Spa-Contract Services","Contracted massage therapists; Freelance spa technicians"],
+  ["Spa","16071015","Spa-Guest Supplies","Spa slippers; Spa robes; Spa towels; Cotton rounds; Disposable headbands; Eye pads; Spa amenity kits"],
+  ["Spa","16071020","Spa-Licenses & Permits","Cosmetology license; Spa operating permit; Therapist certification fees"],
+  ["Spa","16071025","Spa-Operating Supplies","Massage oils; Lotions; Essential oils; Hot stones; Wax; Facial products; Nail supplies; Sanitation supplies; Spa linens"],
+  ["Spa","16071030","Spa-Uniforms","Spa uniform; Therapist scrubs; Spa attendant uniforms"],
+  // ── GOLF ──────────────────────────────────────────────────────────────────
+  ["Golf","17052010","Golf-Staff Payroll","Payroll, golf pro; Golf cart attendant; Greenskeeper; Pro shop staff"],
+  ["Golf","17071010","Golf-Cart Maintenance","Golf cart repairs; Cart battery replacement; Cart cleaning supplies"],
+  ["Golf","17071015","Golf-Course Maintenance","Fertilizer; Herbicide; Grass seed; Irrigation parts; Greens equipment; Course supplies"],
+  ["Golf","17071020","Golf-Operating Supplies","Golf balls; Tees; Score cards; Pencils; Rental clubs; Golf towels"],
+  // ── UNDISTRIBUTED ─────────────────────────────────────────────────────────
+  ["Undistributed","U071010","Undistributed-Depreciation","Depreciation of buildings; Depreciation of furniture, fixtures & equipment (FF&E); Amortization"],
+  ["Undistributed","U071015","Undistributed-Insurance","Property insurance; Casualty insurance; Flood insurance; Earthquake insurance; Business interruption insurance"],
+  ["Undistributed","U071020","Undistributed-Interest Expense","Mortgage interest; Loan interest; Line of credit interest; Finance charges"],
+  ["Undistributed","U071025","Undistributed-Rent & Lease","Building lease; Equipment lease; Parking lot lease; Land lease; Ground lease"],
+  ["Undistributed","U071030","Undistributed-Real Estate Taxes","Property tax; Ad valorem tax; Real estate assessment"],
+  ["Undistributed","U071035","Undistributed-Management Fees","Hotel management company fees; Asset management fees; Operator fees"],
+  ["Undistributed","U071040","Undistributed-Capital Reserves","FF&E reserve contributions; Capital improvement reserve"],
+  // ── OTHER ─────────────────────────────────────────────────────────────────
+  ["Other","O071010","Miscellaneous-Other Income","Rebates received; Vendor credits; Miscellaneous income"],
+  ["Other","O071015","Miscellaneous-Charitable Contributions","Hotel charitable donations; Community sponsorships"],
+  ["Other","O071020","Miscellaneous-Pre-Opening Expenses","Pre-opening supplies; Staff training (pre-opening); Pre-opening marketing"],
+];
+
+// ─── DEPT COLOR MAP ──────────────────────────────────────────────────────────
+const DEPT_COLORS = {
+  "Rooms":                              ["var(--pill-rooms-t)","var(--pill-rooms)"],
+  "Food & Beverage":                    ["var(--pill-fb-t)","var(--pill-fb)"],
+  "Administrative & General":           ["var(--pill-admin-t)","var(--pill-admin)"],
+  "Sales & Marketing":                  ["var(--pill-sales-t)","var(--pill-sales)"],
+  "Property Operations & Maintenance":  ["var(--pill-pm-t)","var(--pill-pm)"],
+  "Utilities":                          ["var(--pill-ut-t)","var(--pill-ut)"],
+  "Information & Telecom":              ["var(--pill-it-t)","var(--pill-it)"],
+  "Human Resources":                    ["var(--pill-hr-t)","var(--pill-hr)"],
+  "Transportation":                     ["var(--pill-trans-t)","var(--pill-trans)"],
+  "Retail":                             ["var(--pill-retail-t)","var(--pill-retail)"],
+  "Parking":                            ["var(--pill-parking-t)","var(--pill-parking)"],
+  "Spa":                                ["var(--pill-spa-t)","var(--pill-spa)"],
+  "Golf":                               ["var(--pill-golf-t)","var(--pill-golf)"],
+};
+
+function pillStyle(dept) {
+  const c = DEPT_COLORS[dept];
+  if (c) return `color:${c[0]};background:${c[1]};`;
+  return `color:var(--pill-other-t);background:var(--pill-other);`;
+}
+
+function shortDept(dept) {
+  const map = {
+    "Rooms": "Rooms",
+    "Food & Beverage": "F&B",
+    "Administrative & General": "A&G",
+    "Sales & Marketing": "Sales & Mktg",
+    "Property Operations & Maintenance": "POM",
+    "Utilities": "Utilities",
+    "Information & Telecom": "IT",
+    "Human Resources": "HR",
+    "Transportation": "Transport",
+    "Retail": "Retail",
+    "Parking": "Parking",
+    "Spa": "Spa",
+    "Golf": "Golf",
+    "Undistributed": "Undistributed",
+    "Other": "Other",
+  };
+  return map[dept] || dept;
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+const tbody = document.getElementById('tableBody');
+
+DATA.forEach(row => {
+  const tr = document.createElement('tr');
+  tr.dataset.dept = row[0];
+  tr.dataset.raw = row.join('\t').toLowerCase();
+  tr.innerHTML = `
+    <td><span class="dept-pill" style="${pillStyle(row[0])}">${shortDept(row[0])}</span></td>
+    <td>${row[1]}</td>
+    <td class="acct-name">${row[2]}</td>
+    <td class="item-name">${row[3]}</td>
+  `;
+  tbody.appendChild(tr);
+});
+
+// ─── FILTER & SEARCH ──────────────────────────────────────────────────────────
+const searchInput = document.getElementById('searchInput');
+const deptFilter  = document.getElementById('deptFilter');
+const clearBtn    = document.getElementById('clearBtn');
+const countEl     = document.getElementById('resultCount');
+const emptyState  = document.getElementById('emptyState');
+
+function highlight(text, query) {
+  if (!query) return text;
+  const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(re, '<mark>$1</mark>');
+}
+
+function filter() {
+  const q    = searchInput.value.trim().toLowerCase();
+  const dept = deptFilter.value;
+  clearBtn.style.display = q ? 'block' : 'none';
+
+  let visible = 0;
+  const rows = tbody.querySelectorAll('tr');
+
+  rows.forEach(tr => {
+    const deptMatch = !dept || tr.dataset.dept === dept;
+    const textMatch = !q || tr.dataset.raw.includes(q);
+
+    if (deptMatch && textMatch) {
+      tr.classList.remove('hidden');
+      visible++;
+      // highlight
+      if (q) {
+        tr.querySelector('.acct-name').innerHTML = highlight(tr.querySelector('.acct-name').textContent, q);
+        tr.querySelector('.item-name').innerHTML = highlight(tr.querySelector('.item-name').textContent, q);
+      } else {
+        tr.querySelector('.acct-name').innerHTML = tr.querySelector('.acct-name').textContent;
+        tr.querySelector('.item-name').innerHTML = tr.querySelector('.item-name').textContent;
+      }
+    } else {
+      tr.classList.add('hidden');
+    }
+  });
+
+  countEl.textContent = visible;
+  emptyState.style.display = visible === 0 ? 'flex' : 'none';
+  emptyState.style.flexDirection = 'column';
+  emptyState.style.alignItems = 'center';
+}
+
+// ─── SORT ──────────────────────────────────────────────────────────────────
+let sortCol = -1, sortDir = 1;
+function sortTable(col) {
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  if (sortCol === col) { sortDir *= -1; } else { sortDir = 1; sortCol = col; }
+
+  rows.sort((a, b) => {
+    const aT = a.cells[col].textContent.trim();
+    const bT = b.cells[col].textContent.trim();
+    return aT.localeCompare(bT, undefined, {numeric: true}) * sortDir;
+  });
+  rows.forEach(r => tbody.appendChild(r));
+
+  // update headers
+  document.querySelectorAll('thead th').forEach((th, i) => {
+    th.classList.toggle('sorted', i === col);
+    const icon = th.querySelector('.sort-icon');
+    if (i === col) icon.textContent = sortDir === 1 ? '↑' : '↓';
+    else icon.textContent = '↕';
+  });
+  filter();
+}
+
+searchInput.addEventListener('input', filter);
+deptFilter.addEventListener('change', filter);
+clearBtn.addEventListener('click', () => { searchInput.value = ''; filter(); searchInput.focus(); });
+
+// init count
+filter();
+</script>
+</body>
+</html>
